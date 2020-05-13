@@ -1,19 +1,9 @@
-const http = require('http');
-
 const express = require('express');
 
 const app = express();
 
-app.use((req, res, next) => {
-    console.log('In the middleware!');
-    next(); // Allows the request to continue to the next middleware in line
-});
+const port = 3000
 
-app.use((req, res, next) => {
-    console.log('In another middleware!');
-    res.send('<h1>Hello from Express!</h1>');
-});
+app.get('/', (req, res) => res.send('Hello World!'))
 
-const server = http.createServer(app);
-
-server.listen(3000);
+app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
