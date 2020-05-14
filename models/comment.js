@@ -11,6 +11,8 @@ const postSchema = new Schema(
       type: String,
       required: true,
       lowercase: true,
+      minlength:6,
+      maxlength:100,
     },
     left_at: {
       type: Date,

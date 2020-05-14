@@ -19,6 +19,14 @@ app.use((req, res, next) => {
 app.use("/work-effort", commentRoutes);
 app.use(errorController.get404);
 
+app.use((error, req, res, next)=>{
+    console.log(error);
+    const status = error.statusCode || 500;
+    const message = error.message;
+    res.status(status).json({
+        message:message
+    });
+})
 mongoose
   .connect(
     "mongodb+srv://udara:01478523@cluster0-jmxgv.mongodb.net/comments?retryWrites=true&w=majority"

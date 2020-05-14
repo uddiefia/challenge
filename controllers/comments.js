@@ -1,12 +1,19 @@
 const Comment = require("../models/comment");
+const { validationResult } = require("express-validator/check");
 
 exports.postComment = (req, res, next) => {
-  const cmm = req.body.comment;
+    const erros = validationResult(req);
+    if(!erros.isEmpty()){
+        const error = new Error('Validation failed, comment length must be more than 6 and less than 100');
+        error.statusCode = 422;
+        throw error;
+    }
+  const cmmt = req.body.comment;
   const user_id = req.body.user_id;
   const work_effort_id = req.params.workeffort;
   const comment = new Comment({
     work_effort_id: work_effort_id,
-    comment: cmm,
+    comment: cmmt,
     left_at: new Date(),
     user_id: user_id,
   });
@@ -20,7 +27,10 @@ exports.postComment = (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log(err);
+      if(!err.statusCode){
+            err.statusCode=500;
+      }
+      next(err);
     });
 };
 
@@ -32,7 +42,7 @@ exports.getAllComments = (req, res, next) => {
     .then((comments) => {
       console.log(comments);
       res.status(200).json({
-        message: "get Comments successfully",
+        message: "Get Comments successfully",
         comments: comments,
       });
     })
